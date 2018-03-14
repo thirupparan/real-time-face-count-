@@ -45,7 +45,7 @@ end
 
 
 % --- Executes just before count is made visible.
-function count_OpeningFcn(hObject, eventdata, handles, varargin)
+function count_OpeningFcn(hObject, ~, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -67,7 +67,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = count_OutputFcn(hObject, eventdata, handles) 
+function varargout = count_OutputFcn(~, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -78,16 +78,16 @@ varargout{1} = handles.output;
 
 
 % --- Executes on button press in start.
-function start_Callback(hObject, eventdata, handles)
+function start_Callback(~, ~, ~)
 % hObject    handle to start (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global vid     % making the variable global
-vid = videoinput('winvideo' , 1, 'YUY2_640X480');% Create a video input with YUY2 format and 640X480 resolution
+vid = videoinput('winvideo' , 2, 'YUY2_640x480');% Create a video input with YUY2 format and 640X480 resolution
 
 
 % --- Executes on button press in count.
-function count_Callback(hObject, eventdata, handles)
+function count_Callback(~, ~, handles)
 % hObject    handle to count (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -99,11 +99,12 @@ triggerconfig( vid ,'manual');                                      % the trigge
 set(vid, 'FramesPerTrigger',1);                                     % one frame acquired per trigger
 set(vid, 'TriggerRepeat',Inf);                                      % Keep executing the trigger every time the trigger condition is met until the stop function is called 
 set(vid,'ReturnedColorSpace','rgb');                                % to get the rgb colour image 
-vid.Timeout = 10;
+set (vid,'Timeout',100);
 start(vid);  
 
 while (1)  
-facedetector = vision.CascadeObjectDetector;                                % Create a cascade detector object                                              
+facedetector = vision.CascadeObjectDetector;                                % Create a cascade detector object 
+facedetector.MergeThreshold = 7;                                            %Merge threshold accurate face detection find 
 trigger(vid);                                                               %trigger to get the frame from the video
 image = getdata(vid);                                                       %store that frame in 'image'
 bbox = step(facedetector, image);                                           % position of face in 'bbox' (x, y, width and height)
@@ -118,7 +119,7 @@ end
 
 
 % --- Executes on button press in stop.
-function stop_Callback(hObject, eventdata, handles)
+function stop_Callback(~, ~, ~)
 % hObject    handle to stop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
