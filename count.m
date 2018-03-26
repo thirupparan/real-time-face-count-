@@ -240,7 +240,7 @@ while (1)
 options.detector = vision.CascadeObjectDetector;                            % Create a cascade detector object
 options.detector.MergeThreshold =10;
 trigger(vid);                                                               %trigger to get the frame from the video
-%image = getdata(vid,1,'uint8');                                                       %store that frame in 'image'b
+%image = getdata(vid,1,'uint8');                                             %store that frame in 'image'b
 image=getdata(vid);
 bbox = step(options.detector, image);                                       % position of face in 'bbox' (x, y, width and height)
 insert_object = insertObjectAnnotation(image,'rectangle',bbox,'Face');      % Draw the bounding box around the detected face.
